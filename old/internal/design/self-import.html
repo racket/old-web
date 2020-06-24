@@ -1,0 +1,117 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+  <head>
+    <title>Allowing Self-Import in Units</title>
+  </head>
+
+  <!--#include virtual="/CS/PLT/Formats/body-tag.shtml" -->
+
+  <body>
+    <CENTER><h1>Allowing Self-Import in Units</h1></CENTER>
+
+<p>
+
+MzScheme's unit language currently disallows self-import, i.e., A
+compound unit expression that links an export of a unit as an import
+for the same unit. For version 100alpha1, the PLT decided that we
+should remove the self-import restriction.
+
+<H2>Why we can allow self-import</H2>
+
+Origninally, there was an implementation reason for the self-import
+restriction, but that reason no longer applies (the implementation of
+units was broken at the time). We could lift the restriction in our
+current implementation by simply removing the self-import syntactic
+check for a compound-unit expression.
+
+<P>
+
+After the implementation was fixed, we preserved the self-import
+restriction to avoid a certain kind of aliasing. Given a unit of the
+form
+
+<PRE>
+  (unit (import i) (export e) ...),
+</PRE>
+
+the compiler can assume that set!ing e does not mutate i. But there's
+no guarantee that i won't change as x is set!ed; i is imported as a
+location rather than a value, and another thread could conceivably
+mutate i at the same time that x is mutated. As a result, it's
+difficult to see how the lack of aliasing really helps a compiler.
+
+<P>
+
+The more important constraint for a compiler is that if there is no
+set! for an exported variable within the defining unit, then the
+variable is known to be immutable. If we didn't have the set!
+restriction on imported variables, then the no-aliasing feature might
+be more important.
+
+<H2>Why we should allow self-import</H2>
+
+Suppose you're writing an ff-icfp98 kind of program, and you add a
+`shrink' method, which creates instances. The following is obviously
+not right:
+
+<PRE>
+ (unit (import base%) (export shrinkable%)
+  (define shrinkable%
+    (class base% ()
+     (public
+      [shrink (lambda () (make-object shrinkable% ...))]
+       ..))))
+</PRE>
+
+One solution is to use a virtual constructor. Another solution is to
+import the class to instantiate:
+
+<PRE>
+ (unit (import base% final%) (export shrinkable%)
+  (define shrinkable%
+    (class base% ()
+     (public
+      [shrink (lambda () (make-object final% ...))]
+       ..))))
+</PRE>
+
+If shrinkable% is actually the final class, then you'd like to link
+the unit's shrinkable% export as the unit's final% import, but our
+self-import restriction doesn't allow it.
+
+<H2>Why the example might be bogus</H2>
+
+The above example assumes that the set of initialization arguments to
+the class never changes. What if we apply a color-mixin to
+shrinkable%, which adds an initialization argument to initialize the
+shape's color? In this case, perhaps a clone-with-new-size method is a
+better solution --- as long as color-mixin overrides
+clone-with-new-size. 
+
+<P>
+
+However, is seems that this strategy does not scale as new attributes
+and new object-creating methods are added, anyway. If set!-based
+initializers are used, then the self-import strategy stil works.
+
+<H2>Conclusion</H2>
+
+The specific example may be weak, but there are plenty of other such
+examples that show up in the recursive-module research. We suspect
+that self-import is the right solution in some cases, and perhaps
+we'll find a good example to install in this memo, eventually.
+
+<P>
+
+There did not appear to be a good technical reason to disallow
+self-import, and it seemed that the proper design choice in this case
+was the less-rules/less-checking-code/more-programs path.
+
+<hr>
+    <address><a href="mailto:mflatt@cs.rice.edu">Matthew Flatt</a></address>
+<!-- Created: Feb 11, 1999 -->
+<!-- hhmts start -->
+Thu Feb 11 08:08:49 CST 1999
+<!-- hhmts end -->
+  </body>
+</html>

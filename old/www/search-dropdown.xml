@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Module>
+  <ModulePrefs title="PLT Documentation etc"
+    description="PLT documentation links and more."
+    title_url="http://docs.plt-scheme.org/"
+    author="Eli Barzilay"
+    author_email="eli@barzilay.org"
+    author_affiliation="PLT Scheme"
+    author_location="Boston, MA"
+    width="300"
+    height="140"
+    scrolling="true"/>
+  <UserPref name="rawquery" datatype="hidden" />
+  <UserPref name="selectedtext" datatype="hidden" />
+  <UserPref name="option1" display_name="Option1" />
+  <Content type="html">
+  <![CDATA[
+    <ul>
+      <li><a target="_top" href="http://docs.plt-scheme.org/">Main Documentation page</a></li>
+      <li><a target="_top" href="http://pre.plt-scheme.org/docs/pdf/">Documentation PDF files</a></li>
+      <li><a target="_top" href="http://plt-scheme.org/community.html">Community Page</a></li>
+      <li>View the <a target="_top" href="http://list.cs.brown.edu/mailman/listinfo/plt-scheme/">PLT Scheme mailing list<a> <a target="_top" href="http://list.cs.brown.edu/pipermail/plt-scheme/">archives</a> through <a target="_top" href="http://news.gmane.org/gmane.lisp.scheme.plt">Gmane</a> or <a target="_top" href="http://groups.google.com/group/plt-scheme">Google Groups</a></li>
+      <li>View the <a target="_top" href="http://list.cs.brown.edu/mailman/listinfo/plt-dev/">PLT Scheme developers list<a> <a target="_top" href="http://list.cs.brown.edu/pipermail/plt-dev/">archives</a> through <a target="_top" href="http://news.gmane.org/gmane.lisp.scheme.plt.devel">Gmane</a></li>
+      <li><a target="_top" href="http://svn.plt-scheme.org/">Browse the PLT Scheme code repository</a></li>
+      <li>Learn how to program with <a target="_top" href="http://www.htdp.org/"><i>How to Design Programs</i></a></li>
+    </ul>
+  ]]> 
+  </Content>
+</Module>

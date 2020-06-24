@@ -1,0 +1,68 @@
+<HTML>
+<BODY>
+<PRE>
+From: Matthias Felleisen [matthias@ccs.neu.edu]
+Sent: Monday, April 15, 2002 7:46 PM
+To: plt-design@ccs.neu.edu
+Subject: Full vs Advanced
+
+Matthew, Robby and I have revisited the Full language level, 
+after a bad failure that I had when developing a script/program. 
+
+After re-hashing the issues, we have ended the conversation with 
+this message. 
+
+Robby: please move Full. I believe that PLT is the appropriate hierarchy. 
+I also believe that we should call this HtDP-Enhanced (or something like 
+that). It is, after all, a PLT-language with a few features from the  
+teaching hierarchy thrown in. By moving it, we warn people that it does  
+not respect the entire set of HtDP conventions. 
+
+-- Matthias
+
+  ------- Start of forwarded message -------
+  Date: Mon, 15 Apr 2002 08:19:28 -0600 (MDT)
+  From: Matthew Flatt <mflatt@cs.utah.edu>
+  To: matthias@ccs.neu.edu
+  Cc: robby@cs.rice.edu
+  Subject: Re: equal? on structs, full, alpha15
+  In-Reply-To: <20020415133704.4BADC206F6@sualocin.ccs.neu.edu>
+
+  At Mon, 15 Apr 2002 09:37:04 -0400 (EDT), Matthias Felleisen wrote:
+  > 
+  > I'd like to revisit this design decision, in one of two ways: 
+  >  - make Full an extension of Advanced 
+  >  - place Full into some separate place on the menu.
+
+  I'm still in favor of the latter.
+
+  Merely *specifying* a Full extended from Advanced is a huge pain. And
+  then there's the implementation task. Here's an extract of an earlier
+  message on this topic:
+
+  At Mon, 10 Dec 2001, Matthew Flatt wrote:
+  > return to my old definition: it's MrEd + selected MzLib libraries, such
+  > that all the syntactic forms and procedures of Advanced are available
+  > (plus a lot more). But the forms act like they do in MrEd + MzLib when
+  > they might produce an error (syntactic for run-time) in Advanced.
+  >
+  > In particular,
+  >  (cond)
+  > isn't an error, and neither is
+  >  (cond [#f 5])
+  > or
+  >  (cond [5 5])
+  > --- not because #<void> is the best behavior in the first two cases,
+  > but because that's how MrEd works.
+  >
+  > The alternative --- to make Full's syntactic forms behave more like
+  > Advanced --- is a significant specification and implementation task.
+  > It's not just `cond' and `case'; `local' might signal undefined
+  > variable uses as an error, which suggests that `class' should do the
+  > same, and so on.
+
+  Matthew
+  ------- End of forwarded message -------
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,37 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+  <head>
+    <title>error-display-handler</title>
+  </head>
+
+  <!--#include virtual="/CS/PLT/Formats/body-tag.shtml" -->
+    <h1>error-display-handler</h1>
+From Robby:
+<P>
+I would like to propose a change to the standard parameter
+infrastructure for version 200. It is a minor change, unlikely to
+affect "normal" mzscheme programmers, but it makes the organization of
+DrScheme simpler and makes errortrace work slightly better.
+<P>
+Right now, there is a parameter called:
+<P>
+<tt>error-display-handler : (parameter (string -> void))</tt>
+<P>
+that is called by the exception handler to print the error message. I
+would like to see it accept one more argument:
+<P>
+<tt>error-display-handler : (parameter (string TST -> void))</tt>
+<P>
+The additional argument should be the value passed to `raise'.
+<P>
+This change facilitates errortrace because it will now only have to set
+the error-display-handler to be able to display the contexts (which
+means that it will work more often). In DrScheme, I actually introduce
+another parameter (error-display-handler/exn) that works just like the
+revised error-display-handler. Its default value just calls the
+error-display-handler, but the error-display-handler/exn parameter is
+set in various languages to show the bug and file icons next to the
+error message in the REPL.
+<HR>
+  <!--#include virtual="/CS/PLT/Formats/signature.shtml" -->
+</html>

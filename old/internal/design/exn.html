@@ -1,0 +1,106 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+  <head>
+    <title>Exceptions and modules</title>
+  </head>
+
+  <!--#include virtual="/CS/PLT/Formats/body-tag.shtml" -->
+    <h1>Exceptions and modules</h1>
+From Matthew:
+<P>
+I've spent the last day or so converting MzScheme so that it provides
+module information in exception structures:
+<P>
+<tt>(struct exn (message agent module continuation-marks))</tt>
+<P>
+where the `agent' field is a symbol, and the `module' field is a module
+symbol.
+<P>
+The idea was to help DrScheme connect error messages with
+documentation. That connection is important, and on the surface, adding
+procedure--module (or form--module) information to exceptions seems
+like a good idea.
+<P>
+But now I think it's a bad idea. The change turns out to be fairly
+painful --- not because it's a big change that's difficult to implement
+(like `syntax-case' or `module'), but because it's a small change that
+pervades the entire system.
+<P>
+Examples: `error' must accept a syntax object instead of just a symbol
+to identify the error reporter; procedure name inference must capture
+module contexts, so that wrong-argument-count exceptions can identify
+the procedure; `object-name' can't just return a symbol anymore,
+because it should report the source module, too; structure procedure
+names must be constructed to maintain the module context of the
+supplied base name; many functions in the C API that take a procedure
+name must be changed to take a module context.
+<P>
+To be clear, all of those changes are possible, and I expected many of
+them when I started. But having completed the basic machinery, and with
+a long road yet ahead, and with many performance concerns... I'm
+inclined to call it overkill.
+<P>
+<HR>
+<P>
+How much can we do with just source-location information for errors?
+<P>
+In the case of syntax errors, the form name is not obvious from the
+location, because the error may be highlighted in a specific part of
+the expression. Since adding source form and module fields to
+`exn:syntax' (instead of `exn') requires very little work, it seems
+worthwhile.
+<P>
+In the case of run-time errors where the source location is an
+application expression, the first sub-expression will tend to be the
+funcion name, and its source module can be extracted from the syntax.
+(DrScheme could detect this case by checking whether the function
+expression is an identifier with a module binding.)
+<P>
+Functions-as-values defeat the heuristic that extracts a function name
+from an application expression. But the programmer could probably
+unwind the continuation enough to get to the original reference to the
+function, and then click on that referece for documentation.
+<P>
+More generally, it seems relatively unlikely that an error would be
+reported where the programmer can't easily click an identifier in the
+source (where the module is known) to get documentation. 
+<P>
+That's all more complex than having the best possible link in the
+exception record at all times, but it seems to me a more reasonable
+distribution of complexity (isolated to the DrScheme--help connection,
+instead of spreading throughout all code).
+<P>
+So summarize, I plan to throw away yesterday's work, and instead add
+`form' and `module' fields to `exn:syntax'.
+<P>
+    <hr>
+From Robby:
+<P>
+It sounds like the scheme you suggest might work fine for built-in
+mzscheme primitives, but if we want to treat other imported modules as
+primitives, we might need a little more help from the module
+implementor.
+<P>
+I suggest that we add an `error/docs' procedure that accepts the extra
+arguments. Module implementors can write code that calls that error
+procedure and supply enough information to get to the right
+documentation. That way we can work on this change slowly and with only
+a small addition to mz that just describes the *protocol* for specifing
+the needed information, but doesn't require it to be there.
+<P>
+&gt; More generally, it seems relatively unlikely that an error would be<BR>
+&gt; reported where the programmer can't easily click an identifier in the<BR>
+&gt; source (where the module is known) to get documentation.<BR> 
+<P>
+I don't believe this, since the "right" place to click on it going to
+be somewhere in the context, which will appear to be gibberish to
+everyone except the implementor of the module (judging from what I've
+seen of the errortrace contexts of class's expansions). If I get a
+structure selector error message because I've mis-used the class
+system, I shouldn't get the the docs that describe structs -- I want to
+get docs that describe how I've mis-called the class-system primitive
+opertations. But, I might not know which place in the context is the
+right place to click to get that information.
+<HR>
+  <!--#include virtual="/CS/PLT/Formats/signature.shtml" -->
+</html>

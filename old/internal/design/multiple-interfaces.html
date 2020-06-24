@@ -1,0 +1,87 @@
+<html>
+  <head>
+    <title>Duplicate Interface Method Inheritance</title>
+  </head>
+
+  <!--#include virtual="/CS/PLT/Formats/body-tag.shtml" -->
+    <h1>Duplicate Interface Method Inheritance</h1>
+
+
+<h2>Attendance:</h2>Shriram, Matthew, Robby, Pablito, Clements, Pablo, Matthias
+
+<h2>Issue:</h2>
+<p>
+MzScheme currently allows classes and interfaces to implement multiple
+interfaces defining the same instance variables.  As it stands, MzScheme
+accepts all of the following expressions:
+</p>
+
+<pre>
+<code>
+(define i (interface () a))
+(define j (interface () a))
+(interface (i) a)
+(interface (i j))
+(class* null (i j) () (public a))
+</code>
+</pre>
+
+<p>
+At least some of the above expressions ought not be allowed since they
+most likely represent design errors.  Interfaces provide not only
+syntactic restrictions such as required instance variable names, but also
+informal semantic restrictions.  Two programmers who write different interfaces
+that happen to use identical syntactic names may very well attach different
+semantics to that name.  For example "read" could mean, "This file has been
+read," or, "Read the file in now."  In light of these semantic obligations, a
+class or interface which implements multiple interfaces that have a common
+name likely contains an error.  
+</p><p>
+
+Everyone immediately agreed, though, that the following should be allowed
+since the common name originated from a single interface:
+</p>
+
+<pre>
+<code>
+(define h (interface () a))
+(define i (interface (h)))
+(define j (interface (h)))
+(interface (i j))
+</code>
+</pre>
+
+<p>
+Unfortunately, due to independent development, not wanting to change existing
+code, or a general lack of foresight, common pieces of interfaces with
+compatible semantics are not always factored out.  In this case, combining
+two interfaces makes sense if the they have compatible semantics.  Matthew
+pointed out that even if they do not have identical semantics, it may be
+possible to implement both by dispatching on argument types.  In any case,
+the programmer may have a legitimate reason to combine two such interfaces.
+</p>
+<h2>Resolution:</h2>
+<p>
+Since deciding if two functions have compatible semantics is uncomputable,
+the language implementation can not prove that a program merging two
+interfaces with identical components is in error.  Adding types still doesn't
+provide enough information, so not even statically typed languages reject
+such programs.
+MzScheme will in the future reject only one of the questionable cases:
+<code>(interface (i) a)</code> where <code>i</code> already contains
+<code>a</code>.  In this case, if the programmer intended to require that
+implementations of the interface provide a new service, the programmer
+ought to choose a new name.  MzScheme should assume
+the programmer is unaware of the former declaration, so in the future
+it will signal this as an error.
+
+</p>
+
+<hr>
+<address><a href="mailto:ptg@cs.rice.edu">Paul Thorsen Graunke</a></address>
+<!-- Created: Tue Mar 31 14:58:19 CST 1998 -->
+<!-- hhmts start -->
+Last modified: Mon Oct 19 17:40:27 CDT 1998
+<!-- hhmts end -->
+</body>
+</html>

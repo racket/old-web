@@ -1,0 +1,128 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+  <head>
+    <title>Integration testing proposal strawman</title>
+  </head>
+
+  <!--#include virtual="/CS/PLT/Formats/body-tag.shtml" -->
+
+<h1>Integration testing proposal strawman</h1>
+
+<body>
+
+As agreed at an earlier PLT meeting, during development
+cycles, each Thursday towards the end of the day, we'll 
+run integration tests.  Simple integration failures can be
+handled by Friday, so that development can proceed 
+the following week.
+
+<p>
+
+Here is a proposal for the testing protocol.
+
+<p>
+
+Sometime in the early afternoon on Thursday, a message is 
+sent out automatically to plt-design via cron, reminding 
+everyone to update and commit their code by, say, 3 p.m.
+
+<p>
+
+By 3 p.m., everyone should have committed their ready code.
+Everyone should also send a message to plt-design indicating
+that they have committed all code, or have no new code. 
+
+<p>
+
+The tests are run on the development version of the
+software, now invoked using the -x flag, but to be
+run using the "x-..." names in the future.
+
+<p>
+
+Testing is divided into sanity levels.
+
+<p>
+
+At the first sanity level, we make sure every executable is able to
+run.  For DrScheme and MrEd, running means making sure all
+the Scheme files load.  The files to be tested are:
+
+<ul>
+	<li>x-mzscheme</li>
+	<li>x-drscheme-jr</li>
+	<li>x-mzc</li>
+	<li>x-mred</li>
+	<li>x-drscheme</li>
+</ul>
+	
+We just run them, and shut them down.  For mzc, an empty file can 
+be supplied on the command line.  It is probably better not to 
+automate this part of testing, since it will help make sure the run 
+scripts are working.
+
+<p>
+
+If running any of these programs fails, we report the error to
+plt-design, and suspend testing until a fix is found.  If a fix is
+found, we start testing from the beginning.
+
+<p>
+
+At the second sanity level, we run tests on the text-based 
+tools, that is
+
+<ul>
+	<li>x-mzscheme</li>
+	<li>x-drscheme-jr</li>
+	<li>x-mzc</li>
+</ul>
+
+The current test items, and those we add, can be used for this purpose. 
+Scripts to drive the testing will need to be written.
+
+<p>
+
+If any tests fail at this level, we report the error to 
+plt-design, and suspend testing.  Because errors at this
+level may be more subtle than at the first level, a fix
+may not be had so easily.  If a fix is available, it 
+is put in place, and testing resumes.  If a fix is not
+available, we decide whether to continue testing.  Also
+in that case, if the error is new, a PR is filed.
+
+<p>
+
+At the third sanity level, we run tests on the GUI-based 
+tools, that is
+
+<ul>
+	<li>x-drscheme</li>
+	<li>x-mred</li>
+</ul>
+
+Again, the current test items and any new ones can be used,
+with scripts to glue things together.
+
+<p>
+
+The procedures for dealing with errors are as at the second level.
+
+<p>
+
+Finally, the results of testing should be logged to a Web
+page.  Any errors encountered and a description of fixes
+applied should be mentioned there.  The logs may be helpful
+reminders when new bugs appear.
+
+<p>
+
+<hr>
+
+<address><a href="mailto:steck@cs.rice.edu">Paul Steckler</a></address>
+<!-- Created: Thu Apr 30 14:52:06 CDT 1998 -->
+<!-- hhmts start -->
+Last modified: Thu Apr 30 15:16:08 CDT 1998
+<!-- hhmts end -->
+  </body>
+</html>

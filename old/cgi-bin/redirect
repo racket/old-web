@@ -1,0 +1,7 @@
+#!/bin/sh
+FS=' '
+read u
+u="`echo \"$u\" | sed -e 's/^.*xURL=//' | sed -e 's/&.*$//'`"
+u="`echo \"$u\" | sed -e 's,%2[fF],/,g' | sed -e 's/%3[aA]/:/'`"
+echo -ne 'Location: '"$u"'\r\n'
+echo -ne '\r\n'

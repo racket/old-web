@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- Specs for the PLT Scheme search engine -->
+<CustomSearchEngine version="1.0"
+  volunteers="false"
+  keywords="PLT Scheme, plt, scheme, mzscheme, mred, drscheme, lisp, r5rs, r6rs, functional programming, macro"
+  Title="PLT Scheme"
+  Description="PLT Scheme materials from PLT websites">
+  <Context>
+    <Facet>
+      <FacetItem Title="PLT Sites">
+        <Label name="plt"
+               mode="FILTER" Rewrite="" IgnoreBackgroundLabels="false" />
+      </FacetItem>
+    </Facet>
+    <Facet>
+      <FacetItem Title="Sources">
+        <Label name="source"
+               mode="FILTER" Rewrite="" IgnoreBackgroundLabels="false" />
+      </FacetItem>
+    </Facet>
+    <Facet>
+      <FacetItem Title="Documentation">
+        <Label name="docs"
+               mode="FILTER" Rewrite="" IgnoreBackgroundLabels="false" />
+      </FacetItem>
+    </Facet>
+    <Facet>
+      <FacetItem Title="Learn">
+        <Label name="learn"
+               mode="FILTER" Rewrite="" IgnoreBackgroundLabels="false" />
+      </FacetItem>
+    </Facet>
+    <Facet>
+      <FacetItem Title="Academic">
+        <Label name="academic"
+               mode="FILTER" Rewrite="" IgnoreBackgroundLabels="false" />
+      </FacetItem>
+    </Facet>
+    <Facet>
+      <FacetItem Title="Bugs">
+        <Label name="bugs"
+               mode="FILTER" Rewrite="" IgnoreBackgroundLabels="false" />
+      </FacetItem>
+    </Facet>
+    <BackgroundLabels>
+      <Label name="_cse_4yu6uuqr9ia" mode="FILTER" />
+      <Label name="_cse_exclude_4yu6uuqr9ia" mode="ELIMINATE" />
+    </BackgroundLabels>
+  </Context>
+  <LookAndFeel
+    code="2"
+    resultsurl="http://www.plt-scheme.org/search/"
+    nonprofit="true"
+    adsposition="9">
+    <Logo url="http://www.plt-scheme.org/plt-web-med.jpg"
+          destination="http://www.plt-scheme.org/"
+          height="0" width="0" />
+    <Colors url="#008000"
+            background="#FFF0FF"
+            border="#336699"
+            title="#0000CC"
+            text="#000000"
+            visited="#663399"
+            light="#606060" />
+  </LookAndFeel>
+</CustomSearchEngine>

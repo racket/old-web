@@ -1,0 +1,63 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+  <head>
+    <title>Enhancements to GUI tester</title>
+  </head>
+
+  <!--#include virtual="/CS/PLT/Formats/body-tag.shtml" -->
+
+    <h1>Enhancements to GUI tester</h1>
+
+<p>
+    As things stand, the GUI tester is undocumented, both internally and
+    externally.  In the process of reorganizing the code, I have added some
+    comments; more is needed.  When I've developed some better structure
+    for the code, I'll describe it here.
+</p>
+
+<p>
+    Also, there are disparate testing mechanisms for different code bases.
+    For example, MrSpidey has testing mechanisms different from MrEd's.
+    While it is true that the different code bases are now maintained by
+    different individuals, the testers should be usable by others.
+    Eventually, the current maintainers will be elsewhere; also, the person
+    responsible for releases should be able to verify the release.
+</p>
+
+<p>
+    Proposed new test items:
+</p>
+    <ul>
+      <li>Ensure that the initial basis in mred is as documented. Four
+      places need to be checked:
+	<ol>
+	  <li> in the console window, </li>
+	  <li> in a "-A"-style application, </li>
+	  <li> in a "--non-unitized"-style application, and </li>
+	  <li> in the MrEd vocabulary in DrScheme</li>
+	</ol>
+      </li>
+
+      <li>Toggle items in the Language|Configure language|Show Details
+      dialog, and check that they do the right thing
+      </li>
+
+      <li>Toggle items in the Edit|Preferences dialog, and check behavior
+      </li>
+
+      <li>Also toggle items in the MrSpidey Edit|Preferences dialog, and check
+	results</li>
+      <li>
+	Include tests from the prs, outlined in this table:
+<!--#include virtual="pr-tests.html">
+      </li>
+    </ul>
+<hr>
+    <address><a href="mailto:steck@cs.rice.edu">Paul Steckler</a></address>
+<!-- Created: Jan 28, 1998 -->
+<!-- hhmts start -->
+Last modified: Mon Feb  9 13:48:09 CST 1998
+<!-- hhmts end -->
+  </body>
+</html>
+

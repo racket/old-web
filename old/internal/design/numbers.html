@@ -1,0 +1,50 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+  <head>
+    <title>Floating-point and Rational Numbers in DrScheme</title>
+  </head>
+
+  <!--#include virtual="/CS/PLT/Formats/body-tag.shtml" -->
+
+  <body>
+    <h1>Floating-point and Rational Numbers in DrScheme</h1>
+
+<p>
+
+To avoid explaining floating-point numbers to students right away, we
+will disallow decimal numbers as input in DrScheme's Beginner
+language. (The interim solution of converting decimal inputs to exact
+numbers was rejected on the grounds that if two different language
+levels both accept an expression as legal, they should assign it the
+same semantics.)
+
+<p>
+
+In case the student uses a transcendental function, such as
+<tt>sqrt</tt> the decimal result will be printed with a leading
+<tt>#i</tt>, and decimals prefixed with <tt>#i</tt> will be accepted
+as input. This will enable a student to step through computations.
+
+<p>
+
+A related question is how to print non-integer rational
+numbers. Humans are likely to find <tt>2<sup>1</sup>/<sub>2</sub></tt>
+more readable than <tt>5/2</tt>. DrScheme could print <tt>5/2</tt> as
+<tt>(+ 2 1/2)</tt>, but this may induce as much confusion as
+clarification. (Do teachers understand that
+<tt>2<sup>1</sup>/<sub>2</sub></tt> means
+<tt>2+<sup>1</sup>/<sub>2</sub></tt>? Will the rewriting rules be
+confusing?) The solution, for a future release, is that DrScheme will
+print <tt>2<sup>1</sup>/<sub>2</sub></tt> using the editor's graphics
+capabilities. This printed output can be cut-and-pasted to embed it in
+a program.
+
+<hr>
+    <address><a href="mailto:mflatt@cs.rice.edu">Matthew Flatt</a></address>
+<!-- Created: Feb 17, 1998 -->
+<!-- hhmts start -->
+Last modified: Tue Feb 17 10:26:54 CST 1998
+<!-- hhmts end -->
+  </body>
+</html>
+

@@ -1,0 +1,55 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+  <head>
+    <title>Parameterization in Zodiac:read</title>
+  </head>
+
+  <!--#include virtual="/CS/PLT/Formats/body-tag.shtml" -->
+
+  <body>
+    <h1>Parameterization in Zodiac:read</h1>
+
+    Under certain conditions, DrScheme's Check Syntax button causes an
+    internal error. They are:
+    <ul>
+      <li> DrScheme was started with a file, </li>
+      <li> Execute has not been clicked, and </li>
+      <li> There is a symbol in the input. </li>
+    </ul>
+
+    In those conditions, <tt>zodiac:read</tt> is called with <tt>#f</tt>,
+    instead of a parameterization and it fails. Five possible solutions
+    were presented:
+    <ol>
+      <li> Change <tt>zodiac:read</tt> to accept only a boolean instead of
+	a parameterization. The boolean would be used for case sensitivity, 
+
+	which is the only parameter that the reader currently inspects.
+      </li>
+      <li> Always initialize the repl when DrScheme is started up.
+	<ul> <li> Use threads to avoid some of the cost. </li> </ul>
+      </li>
+      <li> Don't show the Check Syntax button until Execute has been
+	clicked. 
+      </li>
+      <li> Initialize the REPL when Check Syntax is clicked the first
+	time. 
+      </li>
+      <li> Get the case-sensitive from the current parameterization, rather 
+
+	than passing a parameterization.
+      </li>
+    </ol>
+
+    For version 51, we choose to do solution 1, and for 52 we will do
+    solution 5.
+
+    <hr>
+    <address><a href="mailto:robby@cs.rice.edu">Robby Findler</a></address>
+<!-- Created: Thu Jan 15 17:23:22 CST 1998 -->
+<!-- hhmts start -->
+Last modified: Thu Jan 15 17:42:48 CST 1998
+<!-- hhmts end -->
+  </body>
+</html>
+

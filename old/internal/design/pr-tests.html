@@ -1,0 +1,241 @@
+There are two priorities: high and <b>higher</b>.
+
+    <table border>
+
+      <tr valign=top><td><b>PR</b></td>
+	             <td><b>Test</b></td>
+                     <td><b> Status </b></td>
+                     <td><b> Priority </b></td></tr>
+
+      <tr valign=top><td>17</td>                  
+	<td>Create new frame, check that all buttons and menus exist</td>
+	<td> Done </td>
+	<td>High</td></tr>
+      <tr valign=top>
+	<td> 39 </td>
+	<td>
+	  See if (require-library "referf.ss") generates error
+	</td>
+	<td> Done </td>
+	<td>High</td></tr>
+      <tr valign=top>
+	<td>46</td>
+	<td>
+          In the REP, eval <tt>(register-will (list 1 2 3) display)</tt>
+          Hit "Execute"
+          In the REP, eval <tt>(collect-garbage)</tt>
+	  Make sure no printout occurs
+	</td>
+	<td> Done </td>
+	<td>High</td></tr>
+      <tr valign=top>
+	<td>48</td>
+	<td>
+	  Add check syntax tests:
+
+	  <ol>
+	    <li>1. illegal syntax (eg, mismatched parens) causes internal error.</li>
+          
+	    <li> 2. (quote x) is marked as const (correct), but quasiquote, unquote,
+	      unquote-splicing (spelled out, not tick mark) are unmarked. </li>
+          
+	    <li> 3. 'a and '(a b c) are unmarked.</li>
+          
+	    <li> 4. (or 1 2 3) and (and 1 2 3) fail to mark the last element.</li>
+          
+	    <li> 5. #&a, #&"hi", #&2 are entirely unmarked (not even the "hi" or 2).</li>
+          
+	    <li> 6. local is unmarked, and so is define inside local. </li>
+	  </ol>
+	  </td>
+	<td> Done </td>
+	<td>High</td></tr>
+      <tr valign=top>
+	<td>51</td>
+	<td>Suppose I am in directory A.  A has a sub-directory B.  In B are two
+	  files, 1 and 2.  1's contents are (load-relative "2").  2 does a
+	  printf.  From A, I do a (reference "B/1"). Ensure printf occurs.
+	</td>
+	<td> Done </td>
+	<td>High</td></tr>
+      <tr valign=top>
+	<td>58</td>
+	<td>Check the syntax of </tt>'(a . b)</tt> in all language levels</td>
+	<td> Done </td>
+	<td>High</td></tr>
+      <tr valign=top>
+	<td>59</td>
+	<td>Open a url (from the file menu) and then open a file from
+	  disk. Ensure that the file on disk opens sucessfully.</td>
+	<td> Pending </td>
+	<td>High</td></tr>
+      <tr valign=top>
+	<td>61</td>
+	<td>Open a second drscheme frame. Ensure that buttons are the same
+	  in the two frames.  Essentially the same as pr-17.</td>
+	<td> Done </td>
+	<td>High</td></tr>
+      <tr valign=top>
+	<td>80</td>
+	<td>Create a frame with a buggy callback in the definitions
+	  window. Invoke the callback (button click or whatever). Insure
+	  the source text is highlighted correctly.</td>
+	<td> Done </td>
+	<td><B>Higher</B></td></tr>
+      <tr valign=top>
+	<td>91</td> <td>Put an error and then a valid expression after the
+	error in the interaction window in drs. Ensure that the valid
+	expression after the error doesn't run. Do the same thing in a file
+	and load the file. Do the same thing (putting the expressions in a
+	  begin) and call eval on it.</td>
+	<td> Pending </td>
+	<td><B>Higher</B></td></tr>
+      <tr valign=top>
+	<td>93</td> <td>Make sure the drs's memory use stabilizes after
+	many clicks on execute. It shouldn't grow forever (or grow very
+	slowly).</td>
+      <td> Pending </td>
+	<td><B>Higher</B></td></tr>
+      <tr valign=top>
+	<td>95</td>
+	<td>Make sure the quit warns about unsaved files</td>
+	<td> Pending </td>
+	<td><B>Higher</B></td></tr>
+      <tr valign=top>
+	<td>99</td>
+	<td>
+	  The following program shouldn't print anything to stdout or signal an
+	  error about an exception handler not escaping.
+
+	  <pre>
+ (define s (make-semaphore))
+ (thread (lambda ()
+            (with-handlers ([void void])
+              (semaphore-wait s)
+              (car 0))))
+ (current-exception-handler display)
+ (semaphore-post s)
+	  </pre>
+	</td>
+	<td> Pending </td>
+	<td>High</td></tr>
+      <tr valign=top>
+	<td>99</td>
+	<td>the
+	  following program should return #f:
+	  <pre>
+  (define x 5)
+  (thread-wait (thread (lambda () (set! x (current-parameterization)))))
+  (eq? x (current-parameterization))
+	  </pre>
+	</td>
+      <td> Done </td>
+	<td><B>Higher</B></td></tr>
+      <tr valign=top>
+	<td>102</td> <td>control-s should search in the window where the
+	cursor was most recently. Make sure this works in the interactions
+	and definitions windows.</td>
+	<td>Pending</td>
+	<td>High</td></tr>
+      <tr valign=top>
+	<td>110</td>
+	<td>Make sure the execute, check syntax, and other actions generate 
+	no io. Perhaps this should be incorporated into the general test
+	  suite engine (Have a thread monitor stdio and check
+	  with that thread after each test)</td>
+	<td>Pending</td>
+	<td><B>Higher</B></td></tr>
+      <tr valign=top>
+	<td>115</td>
+	<td>Make sure that clicking execute while an execution is running
+	  is impossible.</td>
+	<td> Pending </td>
+	<td>High</td></tr>
+      <tr valign=top>
+	<td>132</td>
+	<td>Make sure printf prints.</td>
+	<td> Pending </td>
+	<td>High</td></tr>
+      <tr valign=top>
+	<td>144</td> <td>Open the preferences dialog, turn to the check
+	syntax section. Wait for the autosave delay and make sure no
+	autosaves appear.</td>
+	<td> Done </td>
+	<td><B>Higher</B></td></tr>
+      <tr valign=top>
+	<td>147</td>
+	<td>Evaluate <tt>(exit)</tt> in drscheme. Make sure the process
+	  doesn't exit!</td>
+	<td> Pending </td>
+	<td>High</td></tr>
+      <tr valign=top>
+	<td>149</td>
+	<td>Make sure no new prompts appear while executing. Click execute, 
+	go to repl and hit return. Make sure nothing happens.</td>
+	<td> Pending </td>
+	<td>High</td></tr>
+      <tr valign=top>
+	<td>151</td>
+	<td>evaluate  <tt>(define-macro x (lambda (x) 1))</tt> in bottom
+	  window. Click execute. Make sure that definition of <tt>x</tt> is gone. </td>
+	<td> Pending </td>
+	<td>High</td></tr>
+      <tr valign=top>
+	<td>246</td>
+	<td>make sure that <tt>(cons 1 2)</tt> is an error in beginner
+scheme.</td>
+	<td> Done </td>
+	<td><B>Higher</B></td></tr>
+      <tr valign=top>
+	<td>258</td>
+	<td>Make sure that execute doesn't eat up file descriptors. Put
+	  <tt>(repeat 300 (load "tmp.ss"))</tt>, where <tt>tmp.ss</tt> is some file in
+	  the files system (and an appropriate defn of repeat). Then, click
+	  execute a few times. Make sure that the loads don't fail. (Make a 
+	300 a large number to see how it will fail, when developing the
+	  test suite) </td>
+	<td> Pending </td>
+	<td>High</td></tr>
+      <tr valign=top>
+	<td>260</td>
+	<td>Make sure load loads files with multiple values correctly. Put
+	  <tt>(values 1 2)</tt> in a file and load that file.</td>
+	<td> Pending </td>
+	<td>High</td></tr>
+      <tr valign=top>
+	<td>491</td>
+	<td>Make sure that breaking works correctly for the test
+	  expressions in the pr. Try breaking in a couple of different
+	  ways, if possible (ie break immediately, break a bit later,
+	  etc.).</td> 
+	<td> Pending </td>
+	<td><B>Higher</B></td></tr>
+      <tr valign=top>
+	<td>XXX</td> <td> Test to make sure that "text boxes" (see edit
+	menu) work as values. They should:
+	  <ol>
+	    <li> look like a box when evaluated in the repl, 
+	    <li> <pre>display<pre> like boxes, 
+	    <li> <pre>write<pre> like boxes, 
+	    <li> <pre>write<pre> like boxes, and
+	    <li> return themselves when passed to <pre>eval</pre>.
+	  </ol>
+	  
+	</td> 
+	<td> Pending </td>
+	<td><B>Higher</B></td></tr>
+      <tr valign=top>
+	<td>XXX</td>
+	<td> Test to make sure that (print <exp>) prints the same way the
+	    repl prints in all 4 language levels, for these expressions:
+	    <ol>
+	      <li> <pre> (list 1) </pre>
+	      <li> a text box; Use "Edit|Insert Text Box" to get one.
+	      <li> <pre> (lambda (x) x) </pre>
+	      <li> <pre> (let ([x (list 1 2)]) (list x x)) </pre>
+	    </ol>
+	    
+	</td> 
+	<td> Pending </td>
+	<td><B>Higher</B></td></tr>
+    </table>

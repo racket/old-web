@@ -1,0 +1,160 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<!--Converted with LaTeX2HTML 96.1 (Feb 5, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>MzScheme Classes and Mixins: Design Decision Report</TITLE>
+<META NAME="description" CONTENT="MzScheme Classes and Mixins: Design Decision Report">
+<META NAME="keywords" CONTENT="mixins">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<style type="text/css">
+<!--
+SMALL.TINY		{ font-size : xx-small }
+SMALL.SCRIPTSIZE	{ font-size : xx-small }
+SMALL.FOOTNOTESIZE	{ font-size : x-small  }
+SMALL.SMALL		{ font-size : small    }
+BIG.LARGE		{ font-size : large    }
+BIG.XLARGE		{ font-size : x-large  }
+BIG.XXLARGE		{ font-size : xx-large }
+BIG.HUGE		{ font-size : xx-large }
+BIG.XHUGE		{ font-size : xx-large }
+-->
+</style>
+</HEAD>
+<BODY LANG="EN" >
+ <H1 ALIGN=CENTER>MzScheme Classes and Mixins:<BR> Design Decision Report</H1>
+<P ALIGN=CENTER><STRONG>Recorded by Matthew<BR> 
+        Participants: Shriram, Robby, Paul, Matthias, and Matthew</STRONG></P><P>
+<P ALIGN=CENTER><STRONG>Meeting Date: January 15, 1998</STRONG></P><P>
+<P>
+MzScheme provides mixins via <TT>lambda</TT>-<TT>class</TT> combinations,
+and these mixins ultimately inspired the paper ``Classes and Mixins''
+in POPL 98. But the language presented in the paper, an extension of
+Java called M<font size=-1><small>IXED</small></font>J<font size=-1><small>AVA</small></font>, is stronger than MzScheme's mixins. Should
+we change MzScheme to approximiate that mixin language more closely ?
+<P>
+The answer depends on the answers to the following smaller
+questions:
+<P>
+<UL><LI> How can we change MzScheme to support mixins more directly?<LI> If we change the language, will the DrScheme code improve?<LI> If we change the language, will extenal users be greatly affected?
+</UL>
+<P>
+Given our shortage of programmers, the second of the small questions
+dominates the overall decision.
+<P>
+After deliberation, the big answer is ``no, we shouldn't change
+MzScheme''. The little answers, discussed in detail below, include a
+specific design proposal, ``DrScheme does not sufficiently benefit
+from the change'', and ``we don't know whether anyone else cares''.
+<P>
+Apart from the main decision, it appears that DrScheme could benefit
+from a small part of the proposed change to MzScheme. The debate about
+whether to make this small change should be resumed at some point in
+the future.
+<P>
+There is little academic interest in making the changes at this point,
+since the mixins paper has already been published and follow-up work
+is unlikely in the near future. (If we had more manpower to implement
+the changes, we could also produce more published work on these
+mixins, such as papers on performance and implementation techniques).
+<P>
+<H1><A NAME="SECTION00010000000000000000">Changing the Language</A></H1>
+<P>
+<UL><LI> In a M<font size=-1><small>IXED</small></font>J<font size=-1><small>AVA</small></font> program, method declarations can be syntactically
+identified as <B>overriding methods</B> (the superclass must define
+the methed and it will be overridden) and <B>fresh methods</B>
+(regardless of whether the superclass defines the method, the mixin's
+declaration does not override it). The syntactic distinction is
+performed by examining the interface that is ``extended'' by the
+mixin.
+<P>
+MzScheme interfaces are first-class values and thus cannot serve to
+distinguish overriding and fresh instance variable
+declarations. Instead, we could split MzScheme's <TT>public</TT> clause
+into <TT>public-override</TT> and <TT>public-fresh</TT> clauses.<LI> M<font size=-1><small>IXED</small></font>J<font size=-1><small>AVA</small></font> does not allow accessing an ambiguous method name
+in an instance (the method call is disallowed at type-checking). An
+alternative design is to automatically select the leftmost occurrence
+of a method in the instance.
+<P>
+Since accessing an ambiguous instance variable is likely to be an
+error, the revised MzScheme language should also disallow ambiguous
+<TT>ivar</TT> lookups. Obviously, this will be a run-time error, but it is
+an inexpensive check in the current architecture.<LI> As the paper's <TT>get</TT> example demonstrates, it is sometimes
+necessary to refine the view of an instance in order to ensure that a
+method is accessed as intended or to disambiguate a method call.
+<P>
+The revised MzScheme language would need a <TT>view</TT> form/procedure
+that takes an instance and an interface or class and returns a new
+reference to the instance with a restricted view. (Probably,
+interfaces would be only used with <TT>view</TT> since interfaces
+are the only way to assign names to MzScheme mixins.)<LI> In M<font size=-1><small>IXED</small></font>J<font size=-1><small>AVA</small></font>, <TT>this</TT> within a mixin declaration
+is a reference to the ``current instance'' with a restricted
+view. Thus, even after passing <TT>this</TT> to an external method, the
+reference to the object continues to behave as expected by the
+programmer providing <TT>this</TT>.  The typing constraints make it
+relatively natural to require a <TT>view</TT> expression for explicitly
+narrowing the type of a reference.
+<P>
+MzScheme's <TT>this</TT> should not be changed: <TT>this</TT> should remain
+as a reference to the current instance with the maximal view. That
+design choice is more natural for Scheme since the programmer expects
+the client accepting the <TT>this</TT> reference to dynamically determine
+the type and use of the instance.
+<P>
+However, even in a dynamically typed language it may be useful to
+obtain a reference to the ``current instance'' with a view restricted
+to the current mixin. (For example, suppose
+<TT>SecureDoor</TT>'s <TT>canOpen</TT> method calls <TT>get</TT> to obtain the
+needed item.) Thus, a <TT>this/local</TT> built-in variable should be
+added with the same lexical scope as <TT>this</TT>, but bound to the
+instance with a restricted view instead of the maximal view. The
+programmer can then decide which reference is appropriate.
+</UL><H1><A NAME="SECTION00020000000000000000">The Impact on DrScheme</A></H1>
+<P>
+Changing DrScheme to work in a revised object system would take a few
+days or a week (in the recorder's informed opinion; the group did not
+directly discuss this question).  Changing DrScheme to <EM>take
+advantage</EM> of a revised mixin language would take six months (in the
+group's informed opinion).
+<P>
+Even if DrScheme is changed to benefit from the revised language, the
+value of these benefits is probably not great. The paper proclaims the
+advantages of mixins as compared to classes, not as compared to a
+weaker mixin language like MzScheme's. In other words: MzScheme
+handles <TT>LockedShortDoor</TT> and <TT>SecureDoor</TT> fine, but not
+<TT>LockedMagicDoor</TT> -- does it really matter? For DrScheme, the
+answer seems to be ``no''. DrScheme relies heavily on patterns like
+<TT>LockedShortDoor</TT>, but does not require <TT>LockedMagicDoor</TT>s.
+<P>
+After comparing costs and benefits of changing MzScheme and DrScheme,
+it appares that DrScheme would not benefit from a revised object
+system in proportion to the effort required to implement the changes.
+However, there may be some merit in the first part of the proposal --
+adding <TT>public-override</TT> and <TT>public-fresh</TT> clauses -- for
+improving DrScheme's self-documentation and self-checking. At some
+point in the future, we should consider adding a <TT>public-fresh</TT>
+clause where the superclass must <EM>not</EM> have already defined the
+fresh method.
+<P>
+<H1><A NAME="SECTION00030000000000000000">The Impact on Others</A></H1>
+<P>
+It is unclear how many users outside of Rice rely on the current
+object system, but certainly we have never changed such an old and
+stable portion of the language to such a degree. Nevertheless, a
+gradual phase-in for the changes (e.g., keeping <TT>public</TT> for a
+while, along with the new public clauses) is probably sufficient to
+stay on good terms with the handful of developers using the object
+system. Since there is a reasonable upgrade path, our users will
+survive the change if it is deemed worthwhile.
+<P>
+<H1><A NAME="SECTION00040000000000000000">  About this document ... </A></H1>
+<P>
+ <STRONG>MzScheme Classes and Mixins:<BR> Design Decision Report</STRONG><P>
+This document was generated using the <A HREF="http://www-dsed.llnl.gov/files/programs/unix/latex2html/manual/"><STRONG>LaTeX</STRONG>2<tt>HTML</tt></A> translator Version 96.1 (Feb 5, 1996) Copyright &#169; 1993, 1994, 1995, 1996,  <A HREF="http://cbl.leeds.ac.uk/nikos/personal.html">Nikos Drakos</A>, Computer Based Learning Unit, University of Leeds, with bug fixes and extensions by Matthew. <P> The command line arguments were: <BR>
+<STRONG>latex2html</STRONG> <tt>-split 0 mixins.tex</tt>. <P>The translation was initiated by Paul Steckler on Tue Feb 10 11:08:23 CST 1998<BR> <HR>
+<P><ADDRESS>
+<I>Paul Steckler <BR>
+Tue Feb 10 11:08:23 CST 1998</I>
+</ADDRESS>
+</BODY>
+</HTML>

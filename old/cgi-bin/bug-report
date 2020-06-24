@@ -1,0 +1,135 @@
+#!/bin/sh
+#| -*- scheme -*-
+if [ -x "$PLTHOME/bin/mzscheme" ]; then
+  exec "$PLTHOME/bin/mzscheme" -qr "$0" "$@"
+elif [ -x "/usr/local/plt/bin/mzscheme" ]; then
+  exec "/usr/local/plt/bin/mzscheme" -qr "$0" "$@"
+else
+  exec "mzscheme" -qr "$0" "$@"
+fi
+|#
+
+(require (lib "cgi.ss" "net") (lib "sendmail.ss" "net") (lib "xml.ss" "xml")
+         (lib "etc.ss") (lib "md5.ss"))
+
+(define gnats-email "bugs@plt-scheme.org")
+
+(define field
+  (let ([bindings (get-bindings)])
+    (lambda (key . default)
+      ;; seems that key can be either a string or a symbol
+      (let ([values (extract-bindings key bindings)])
+        (cond [(null? values) (and (pair? default) (car default))]
+              [(null? (cdr values)) (car values)]
+              [else (error 'field
+                           "multiple values for ~s: ~s" key values)])))))
+
+(define replyto (or (field "email") (field "replyto" "")))
+(define subject (field "subject" ""))
+(define help-desk? (equal? "true" (field "help-desk")))
+(define extra-headers
+  `(;; ,(string-append "Content-Transfer-Encoding: "
+    ;;                 (if help-desk? "quoted-printable" "8bit"))
+    ;; "Content-Type: text/plain; charset=UTF-8"
+    ))
+
+(define (verify-captcha)
+  (unless (or help-desk?
+              (equal? (regexp-replace* #rx" +" (field "captcha" "") "")
+                      (with-input-from-file
+                          (build-path (this-expression-source-directory)
+                                      "bug-report-captcha")
+                        read-line)))
+    (error "Please enter the correct text at the bottom of the bug form.")))
+
+(define (get-value x)
+  (cond [(string? x)
+         (regexp-replace #rx"\n+$" (regexp-replace #rx"^\n+" x "") "")]
+        [(symbol? x) (get-value (field x ""))]
+        [(and (pair? x) (eq? 'or (car x))) (get-value (ormap field (cdr x)))]
+        [else (error 'get-value "bad value: ~e" x)]))
+
+(define mail-body
+  (map (lambda (l) (string-append (car l) (get-value (cadr l))))
+       `((">Submitter-Id: "   "plt")
+         (">Originator: "     (or name originator))
+         (">Organization: "   "plt")
+         (">Confidential: "   "no")
+         (">Synopsis: "       ,subject)
+         (">Severity: "       severity)
+         (">Priority: "       "medium")
+         (">Category: "       "all")
+         (">Class: "          class)
+         (">Release: "        (or version release))
+         (">Environment:\n"   platform)
+         (">Description:\n"   description)
+         (">How-To-Repeat:\n" how-to-repeat)
+         (">Fix: "            fix))))
+
+(define css-defs
+  (make-comment "
+    BODY,B,TD {font-family:Verdana,Helvetica,sans-serif; font-size:small}
+    H1 {font-family:Times Roman,serif; font-size:x-large}
+    TT {font-size:small}"))
+
+(define (make-page title body)
+  `(html ()
+     (head () (title ,title) (style ((type "text/css")) ,css-defs))
+     (body ((bgcolor "white")) ,@body)))
+
+(define (show-page title body)
+  (output-http-headers)
+  (write-xml/content (xexpr->xml (make-page title body))))
+
+(define (show-normal-output)
+  (show-page "Bug report submitted"
+    `((p "Your PLT bug report has been submitted.")
+      (p "To check on submitted reports, visit the bug report "
+         (a ((href "http://bugs.plt-scheme.org/query/")) "query page")
+         ".")
+      (p "You should receive an email confirming your report in 30 minutes"
+         " or less.  The confirmation will be sent to"
+         (blockquote () (tt ((style "font-size:small")) ,replyto))
+         "If you do not receive such confirmation, please report the problem "
+         "to "
+         (tt ((style "font-size:small")) "scheme@plt-scheme.org")
+         " or to the PLT "
+         (a ((href "http://www.plt-scheme.org/maillist/")) "mailing list")
+         "."))))
+
+(define (show-error-page exn)
+  (define style (string-append "font-weight: bold;"
+                               " border: 2px solid #f44;"
+                               " background-color: #fee;"
+                               " padding: 6px;"))
+  (define err (if (exn? exn) (exn-message exn) (format "~s" exn)))
+  (show-page "Bug report error"
+    `((p "An error occurred when submitting your PLT bug report."
+         (blockquote ((style ,style)) (tt () ,err))
+         "If this problem persists, please send email to the PLT Scheme"
+         " mailing list, or to " (tt () "scheme@plt-scheme.org") "."))))
+
+(with-handlers ([void show-error-page])
+  ;; avoid a duplicate submission on refreshes by using a checksum file
+  (define cksum-file
+    (let ([p (open-output-bytes)])
+      (write (list* replyto subject mail-body) p)
+      (format "/tmp/bug-report-cksum-~a" (md5 (get-output-bytes p)))))
+  (when (file-exists? cksum-file)
+    (let ([age (- (current-seconds)
+                  (file-or-directory-modify-seconds cksum-file))])
+      (if (< age 300)
+        (error "This bug report has already been submitted")
+        (delete-file cksum-file))))
+  (verify-captcha)
+  (apply send-mail-message
+         replyto         ; from header
+         subject         ; subject
+         `(,gnats-email) ; to
+         '()             ; cc
+         '()             ; bcc
+         mail-body       ; list of lines of body
+         extra-headers   ; additional headers
+         )
+  (with-output-to-file cksum-file newline)
+  (show-normal-output))

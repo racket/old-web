@@ -1,0 +1,44 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+  <head>
+    <title>MrEd Critique</title>
+  </head>
+
+  <!--#include virtual="/CS/PLT/Formats/body-tag.shtml" -->
+    <h1>MrEd Critique</h1>
+
+<pre>
+
+<h2>mred:item interface</h2>
+
+Currently, no specification exists to indicate how MrEd GUI
+components may be composed dynamically.  In addition to
+writing external documentation, we could enforce composition
+constraints with types.  For example, objects from any of several 
+MrEd classes can be children of panels.  Abstracting over those 
+kinds of objects, we arrive at an interface, <tt>mred:item</tt>, 
+which describes per-node operations on composites.  We use an interface 
+rather than a superclass, because there is no state description 
+shared among the MrEd classes for these objects.  For instance,
+a listbox's state is different than a checkbox's state.  The
+interface operations might include
+
+<ul>
+<li>insert-item
+<li>insert-item-list
+<li>delete-item
+</ul>
+
+
+<p>
+
+</pre>
+
+    <hr>
+    <address><a href="mailto:robby@cs.rice.edu">Robert Bruce Findler</a></address>
+<!-- Created: Tue Mar 31 14:58:19 CST 1998 -->
+<!-- hhmts start -->
+Last modified: Wed May 27 14:08:19 CDT 1998
+<!-- hhmts end -->
+  </body>
+</html>

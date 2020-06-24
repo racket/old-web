@@ -1,0 +1,31 @@
+#!/bin/sh
+#| -*- scheme -*-
+if [ -x "$PLTHOME/bin/mzscheme" ]; then
+  exec "$PLTHOME/bin/mzscheme" -qr "$0" "$@"
+elif [ -x "/usr/local/plt/bin/mzscheme" ]; then
+  exec "/usr/local/plt/bin/mzscheme" -qr "$0" "$@"
+else
+  exec "mzscheme" -qr "$0" "$@"
+fi
+|#
+
+;; this script always reports the same version now, for older installations
+
+(define reported-version "300")
+(define reported-iter    "0")
+
+(require (lib "cgi.ss" "net"))
+
+(define binary-version
+  (extract-binding/single "binary-version" (get-bindings)))
+
+(define info
+  `((package "binary")
+    (installed-version ,binary-version)
+    (installed-iteration "0")
+    (latest-version ,reported-version)
+    (latest-iteration ,reported-iter)
+    (verdict update)))
+
+(output-http-headers)
+(printf "~s\n" info)

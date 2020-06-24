@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- http://toolbar.google.com/buttons/add?url=http://plt-scheme.org/search-button.xml -->
+<custombuttons xmlns="http://toolbar.google.com/custombuttons/">
+  <button>
+    <title>PLT Docs</title>
+    <description>Search the PLT Scheme Documentation</description>
+    <site>http://docs.plt-scheme.org/</site>
+    <option>
+      <title>Search Context</title>
+      <description>
+        Enter a search context.
+        For example, "M:" will look only for bindings, and "M:scheme"
+        will look only for bindings from the scheme modules.
+      </description>
+      <default></default>
+    </option>
+    <search charset="UTF-8">http://docs.plt-scheme.org/search/search-context.html?q={query}&amp;hq={option1}</search>
+    <send>http://docs.plt-scheme.org/search/search-context.html?q={selection}&amp;hq={option1}</send>
+    <update>http://plt-scheme.org/search-button.xml</update>
+    <gadget width="300" height="140"
+            query="rawquery"
+            selection="selectedtext"
+            option1="option1">
+      http://plt-scheme.org/search-dropdown.xml
+    </gadget>
+    <icon mode="base64" type="image/x-icon">
+AAABAAEAEBAQAAAAAAAoAQAAFgAAACgAAAAQAAAAIAAAAAEABAAAAAAAwAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAACAAACAAAAAgIAAgAAAAIAAgACAgAAAwMDAAICAgAAAAP8AAP8AAAD//wD/AAAA
+/wD/AP//AAD///8AAAAAAAAAAAAAAAmZmZAAAAAJ+ZmZmfAAAJn/mZmf/AAAmZ+ZmZ/MAAmZn/mZ
+/8zACZmZ+Zn8zMAJmZn/n/zMwAmZmZ//zMzACZmZmf/MzMAJmZmZ/MzMwACZmZ/8zMwAAJmZn8zM
+zAAACZ/8zMzAAAAADMzMwAAAAAAAAAAAAAD4HwAA4AcAAMADAACAAQAAgAEAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAIABAACAAQAAwAMAAOAHAAD4HwAA
+    </icon>
+  </button>
+</custombuttons>

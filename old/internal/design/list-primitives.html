@@ -1,0 +1,23 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+  <head>
+    <title>Revision of the List Primitives Names in DrScheme </title>
+  </head>
+
+  <!--#include virtual="/CS/PLT/Formats/body-tag.shtml" -->
+    <h1>Revision of the List Primitives Names in DrScheme </h1>
+
+    <p>
+    We decided to use <tt>empty</tt>, <tt>cons</tt>, <tt>first</tt>, and 
+    <tt>rest</tt>.
+    </p>
+
+    <p>
+    This requires changing print convert. It will now be
+      parameterized over the name of the empty list. It will default to
+      <tt>null</tt>, and DrScheme will set it to <tt>empty</tt>.
+    </p>
+
+    <hr>
+  <!--#include virtual="/CS/PLT/Formats/signature.shtml" -->
+</html>
