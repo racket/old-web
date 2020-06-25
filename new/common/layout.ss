@@ -70,7 +70,7 @@
     (define racket-site @a[href: "http://racket-lang.org"]{Racket site})
     (define short-obsolete
       ;; short obsolete text for the top
-      @div[class: 'obsolete style: "visibility: hidden;" id: 'obs0]{
+      @div[class: 'obsolete  id: 'obs0]{
         @span[class: 'obsother]{
           See the @racket-site for up-to-date information},
         because PLT Scheme is now Racket.  (@why)
@@ -86,25 +86,7 @@
            of our programming language and IDE.}
         @p{This @strong{web page} is maintained for historical reasons only.
            For all future releases, please visit the @|racket-site|.}})
-    (list
-     @short-obsolete
-     @div[class: 'obsdimmer id: 'obs1]{@nbsp}
-     @div[class: 'obsdimmertable id: 'obs2]{
-       @table[align: 'center valign: 'center width: "100%" height: "100%"]{
-         @tr{@td[width: "45%"]{@nbsp}
-             @td[align: 'center valign: 'center]{
-               @div[class: 'obsdimmertext]{
-                 PLT Scheme is now Racket
-                 @br
-                 @long-obsolete
-                 @div[class: 'obsdimmerclose]{
-                   @a[href: "#"
-                      onmousedown:
-                      '("getElementById('obs0').style.visibility='visible';"
-                        "getElementById('obs1').style.display='none';"
-                        "getElementById('obs2').style.display='none';")]{
-                     [close]}}}}
-             @td[width: "45%"]{@nbsp}}}})))
+    (list @short-obsolete)))
 
 ;; page layout function
 (define (page* #:id [id #f]

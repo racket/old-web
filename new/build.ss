@@ -5,3 +5,6 @@
 (provide build)
 (define (build)
   (run))
+
+(module* main #f
+  (build))
